@@ -1,0 +1,35 @@
+{
+    "instructions": [
+      {
+        "name": "ADD", 
+        "fields": {
+          "OPCODE": 6,
+          "RS": 5,
+          "RT": 5,
+          "RD": 5,
+          "FUNC": 11
+        }
+      },
+      {
+        "name": "LW",
+        "fields": {
+          "OPCODE": 6,
+          "BASE": 5,
+          "OFFSET": 16
+        }
+      },
+      {
+        "name": "mlae8.m",
+        "fields": {
+          "funct6(0x01)": 6,
+          "ls(0)": 1,
+          "rs2": 5,
+          "rs1": 5,
+          "eew(0)": 3,
+          "tr(0)": 1,
+          "md": 3,
+          "OP-M32(0x77)": 7
+        }
+      }
+    ]
+  }

@@ -20,7 +20,7 @@
 //         // 0000_0100_0110_0010_1000_0000_1111_0111
 //         "mlae8.m tr1, (t0), t1\n"
 //         // ".word 0x046280F7\n"
-//         : 
+//         :
 //         : "r"(input)
 //         : "t0", "t1"
 //     );
@@ -62,7 +62,7 @@ int main() {
     //msettilem设置
     uint64_t mtilem_init, x4_initm;
     getMtilem(&mtilem_init, &x4_initm);
-    
+
     __asm__ volatile("msettilemi x4, 0x8");
     uint64_t mtilem_msettilemi, x4_msettilemi;
     getMtilem(&mtilem_msettilemi, &x4_msettilemi);
@@ -73,7 +73,7 @@ int main() {
     //msettilen设置
     uint64_t mtilen_init, x4_initn;
     getMtilen(&mtilen_init, &x4_initn);
-    
+
     __asm__ volatile("msettileni x4, 0x4");
     uint64_t mtilen_msettileni, x4_msettileni;
     getMtilen(&mtilen_msettileni, &x4_msettileni);
@@ -84,7 +84,7 @@ int main() {
     //msettilek设置
     uint64_t mtilek_init, x4_initk;
     getMtilek(&mtilek_init, &x4_initk);
-    
+
     __asm__ volatile("msettileki x4, 0x4");
     uint64_t mtilek_msettileki, x4_msettileki;
     getMtilek(&mtilek_msettileki, &x4_msettileki);
@@ -93,7 +93,15 @@ int main() {
     printf("  x5       = 0x%lx\n", x4_msettileki);
 
     //load数据
-    const uint8_t ls_i8_src1[8*8]={
+    const uint8_t ls_i8_src1[8*16]={
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
+    1,2,3,4,5,6,7,8,
     1,2,3,4,5,6,7,8,
     1,2,3,4,5,6,7,8,
     1,2,3,4,5,6,7,8,

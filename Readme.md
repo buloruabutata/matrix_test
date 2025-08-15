@@ -1,5 +1,5 @@
 # 存取指令测试运行方法
-
+运行GenData.py，会在build文件夹中生成测试用例。
 ```
 cd load_store
 python GenData.py

@@ -60,19 +60,11 @@ def generate_riscv_data(test_config, output_dir="build"):
         f.write(f"# ------------------- Data Definition -------------------\n")
         f.write(f".data\n")
         # 数组开始标签
-        f.write(f"{test_config['name']}:\n")
+        f.write(f"{test_config['name']}_load:\n")
 
         # 选择正确的汇编指令和格式化函数
         directive = directive_map[test_config["width"]]
         formatter = format_func[test_config["width"]]
-
-        # 每行写入多个值以提高可读性
-        values_per_line = {
-            8: 12,  # 每行12个byte (保持行宽适中)
-            16: 8,  # 每行8个half
-            32: 4,  # 每行4个word
-            64: 2,  # 每行2个dword
-        }
 
         current_line = []
         for i, value in enumerate(test_config["data"]):
@@ -88,33 +80,55 @@ def generate_riscv_data(test_config, output_dir="build"):
             current_line.append(hex_value)
 
             # 每行写入指定数量的值
-            if len(current_line) >= values_per_line[test_config["width"]]:
+            if len(current_line) >= 128 // test_config["width"]:
                 f.write(f"    {directive} {', '.join(current_line)}\n")
                 current_line = []
 
         # 写入剩余的值
         if current_line:
-            f.write(f"    {directive} {', '.join(current_line)}\n")
+            f.write(f"    {directive} {', '.join(current_line)}\n\n")
 
         # 数组结束标签
-        f.write(f"{test_config['name']}_end:\n\n")
+        # f.write(f"{test_config['name']}_load_end:\n\n")
 
+        # 创建空白区域
+        f.write(f"{test_config['name']}_store:\n")
+        # .space以字节为单位，乘以8用于兼容64bit情况
+        f.write(f"    .space {len(test_config['data']) * 8}\n\n")
+        # 移除end能够多跑一条store指令，但是仍然出现段错误
+        # f.write(f"{test_config['name']}_store_end:\n\n")
+
+        f.write(f".text\n")
+        f.write(f".global _start\n")
+        f.write(f"_start:\n")
+        f.write(f"    msettypei t0, e8\n")
         # ==================== Tile操作代码部分 ====================
         f.write(f"# ------------------- Tile Operations -------------------\n")
         f.write(f"# TILE configuration for {test_config['width']}-bit processing\n")
-        f.write(f".text\n")
-        f.write(f"_start:\n")
         f.write(f"    msettilemi t0, 0x{test_config['m']:X}\n")
         f.write(f"    msettileki t0, 0x{test_config['n']:X}\n")
         f.write(f"    msettileni t0, 0x{test_config['k']:X}\n")
-        f.write(f"    li t1, {test_config['width']}\n")
-        f.write(f"    la t0, {test_config['name']}\n")
-        f.write(f"    mlae{test_config['width']:d}.m tr1, (t0), t1\n")
-        f.write(f"    mlate{test_config['width']:d}.m tr1, (t0), t1\n")
-        f.write(f"    mlbe{test_config['width']:d}.m tr1, (t0), t1\n")
-        f.write(f"    mlbte{test_config['width']:d}.m tr1, (t0), t1\n")
-        f.write(f"    mltre{test_config['width']:d}.m tr1, (t0), t1\n")
-        f.write(f"    mlacce{test_config['width']:d}.m acc1, (t0), t1\n")
+        f.write(f"    li t0, {test_config['width']}\n")
+        f.write(f"    la t1, {test_config['name']}_load\n")
+        f.write(f"    la t2, {test_config['name']}_store\n\n")
+
+        ls_instr_type = ["a", "at", "b", "bt", "c", "ct", "tr", "acc"]
+        for instr_type in ls_instr_type:
+            mat_reg_index = random.randint(1, 7)
+            mat_reg_type = "acc" if "c" in instr_type else "tr"
+            f.write(
+                f"    ml{instr_type}e{test_config['width']}.m \
+                    {mat_reg_type}{mat_reg_index}, (t1), t0\n"
+            )
+            f.write(
+                f"    ms{instr_type}e{test_config['width']}.m \
+                    {mat_reg_type}{mat_reg_index}, (t2), t0\n"
+            )
+            f.write(
+                f"    ms{instr_type}e{test_config['width']}.m \
+                    {mat_reg_type}0, (t2), t0\n\n"
+            )
+
         # 使用m5_exit 系统调用号退出程序
         f.write(f"    li a0, 0\n")
         f.write(f"    li a7, 10\n")

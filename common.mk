@@ -49,7 +49,7 @@ gem5_c: c
 	mkdir -p build
 	../../riscv-ame-gem5/build/RISCV/gem5.$(gem5_type) --debug-flags=$(debug) ../../riscv-ame-gem5/configs/deprecated/example/se.py --cmd=build/$(src).elf $(cpu_type) | tee build/gem5.log
 
-gem5_asm: asm
+gem5: asm
 	mkdir -p build
 	../../riscv-ame-gem5/build/RISCV/gem5.$(gem5_type) --debug-flags=$(debug) ../../riscv-ame-gem5/configs/deprecated/example/se.py --cmd=build/$(src).elf $(cpu_type) | tee build/gem5.log
 

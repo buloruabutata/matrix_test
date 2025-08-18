@@ -1,0 +1,34 @@
+[
+    {
+      "name": "ls_8bit",
+      "data_length": 1000,
+      "width": 8,
+      "m": 8,
+      "n": 8,
+      "k": 8
+    },
+    {
+      "name": "ls_16bit",
+      "data_length": 1000,
+      "width": 16,
+      "m": 8,
+      "n": 8,
+      "k": 8
+    },
+    {
+      "name": "ls_32bit",
+      "data_length": 1000,
+      "width": 32,
+      "m": 8,
+      "n": 8,
+      "k": 8
+    },
+    {
+      "name": "ls_64bit",
+      "data_length": 1000,
+      "width": 64,
+      "m": 8,
+      "n": 8,
+      "k": 8
+    }
+  ]

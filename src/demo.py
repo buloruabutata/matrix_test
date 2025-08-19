@@ -4,7 +4,7 @@ import sys
 from lib.csr.test import CSRTest
 from lib.load_store.test import LSTest
 
-class_registry = {"csr": CSRTest, "load_stroe": LSTest}
+class_registry = {"csr": CSRTest, "load_store": LSTest}
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class BaseTest:
-    # 指令映射表
     directive_map = {8: ".byte", 16: ".half", 32: ".word", 64: ".dword"}  # 或 .quad
     # 格式化函数映射
     format_func = {
@@ -48,7 +47,7 @@ class BaseTest:
             f.write("\n")
             f.write(self.gen_text_segment(config))
             # 使用m5_exit 系统调用号退出程序
-            f.write(f"    li a0, 0\n    li a7, 10\n    ecall\n")
+            f.write(f"    li a0, 0\n    li a7, 93\n    ecall\n")
 
     def gen_all_asm(self):
         for config in self.config_list:

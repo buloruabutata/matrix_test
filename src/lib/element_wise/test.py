@@ -4,7 +4,7 @@ from pathlib import Path
 from ..base_test import BaseTest  # 相对导入，需要作为包运行
 
 
-class LSTest(BaseTest):
+class EWTest(BaseTest):
     ls_instr_type = ["a", "at", "b", "bt", "c", "ct", "tr", "acc"]
 
     def __init__(self, config_file="config.json"):
@@ -37,15 +37,13 @@ class LSTest(BaseTest):
         segment += f"    msettileni t0, 0x{config['k']:X}\n"
         segment += f"    li t0, {config['width']}\n"
         segment += f"    la t1, array_0\n"
+        # segment += f"    la t2, {config['name']}_load_2\n"
         segment += f"    la t2, {config['name']}_store\n\n"
 
-        for instr_type in self.ls_instr_type:
-            mat_reg_index = random.randint(1, 7)
-            mat_reg_type = "acc" if "c" in instr_type else "tr"
-            segment += f"    ml{instr_type}e{config['width']}.m \
-                    {mat_reg_type}{mat_reg_index}, (t1), t0\n"
-            segment += f"    ms{instr_type}e{config['width']}.m \
-                    {mat_reg_type}{mat_reg_index}, (t2), t0\n"
-            segment += f"    ms{instr_type}e{config['width']}.m \
-                    {mat_reg_type}0, (t2), t0\n\n"
+        md, ms1, ms2 = random.sample(range(0, 8), 3)
+        # 目前只进行简单测试，由于t2对应的数据段为空，该操作类似于数据平移
+        segment += f"    mlacce8.m acc{ms1}, (t1), t0\n"
+        segment += f"    mlacce8.m acc{ms2}, (t2), t0\n"
+        segment += f"    maddu.b.mm acc{md}, acc{ms1}, acc{ms2}\n"
+
         return segment

@@ -2,9 +2,16 @@ import random
 import sys
 
 from lib.csr.test import CSRTest
+from lib.element_wise.test import EWTest
 from lib.load_store.test import LSTest
+from lib.mma.test import MMATest
 
-class_registry = {"csr": CSRTest, "load_store": LSTest}
+class_registry = {
+    "csr": CSRTest,
+    "load_store": LSTest,
+    "element_wise": EWTest,
+    "mma": MMATest,
+}
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -12,7 +19,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     class_name = sys.argv[1]
-
+    print(class_name)
     # 设置随机种子确保可重现
     random.seed(42)
     # 查找并实例化
